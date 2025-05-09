@@ -222,7 +222,11 @@ The strength of Redux itself is that it creates a data flow outside of your comp
 npm start
 ```
 
-![](./demo.png)
+![](./demo1.png)
+
+<hr />
+
+![](./demo2.png)
 
 ## Others
 
