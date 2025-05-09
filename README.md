@@ -1,5 +1,6 @@
 # Redux Toolkit Quick Start
 
+- https://redux-toolkit.js.org/tutorials/quick-start
 - https://github.com/reduxjs/redux-essentials-counter-example/tree/master
 
 1. Install Redux Toolkit and React-Redux
@@ -168,3 +169,5 @@ The strength of Redux itself is that it creates a data flow outside of your comp
 - https://stackoverflow.com/questions/70136955/is-redux-thunk-middleware-really-needed-in-a-react-hooks-based-app
 
 - [Redux Toolkit vs. TanStack Query: Which Should You Use?](https://medium.com/@andrew.chester/redux-toolkit-vs-tanstack-query-which-should-you-use-3f22ffe29820)
+
+![](./screen1.png)
