@@ -1,15 +1,9 @@
+import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { configureStore } from "@reduxjs/toolkit";
+import store from "./app/store";
 import { Provider } from "react-redux";
-import counterReducer from "../features/counter/counterSlice";
-
-const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-  },
-});
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,80 +1,66 @@
 # Redux Toolkit Quick Start
 
 - https://redux-toolkit.js.org/tutorials/quick-start
-- https://github.com/reduxjs/redux-essentials-counter-example/tree/master
-
-1. Install Redux Toolkit and React-Redux
-2. Create a Redux Store
-3. Provide the Redux Store to React
-4. Create a Redux State Slice
-5. Add Slice Reducers to the Store
-6. Use Redux State and Actions in React Components
-
+- [redux quick start repo](https://github.com/reduxjs/redux-essentials-counter-example/tree/master)
+- [Todo sample](https://medium.com/@kmraman11011/title-building-a-todo-app-with-react-and-redux-toolkit-5ae2740048c3)
 <hr />
 
-## Install Redux Toolkit and React-Redux
-
 ```js
-npm install @reduxjs/toolkit react-redux
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { Provider, useSelector, useDispatch } from "react-redux";
+import ReactDOM from "react-dom";
+
+const store = configureStore({reducer:{}})
+const counterSlice = createSlice({name: xxx, initialState: {}, reducers: {add:(state,action)=>{}}})
+export const {func1, func2} = counterSlice.actions
+export default counterSlice.reducer
+const count = useSelector((state) => state.counter.value)
+const dispatch = useDispatch()
+onClick={() => dispatch(decrement())}>
+dispatch(addTodo(text))
+
+ReactDOM.render(<Provider store={store}><App /></Provider>,document.getElementById("root"));
 ```
 
-## Create a Redux Store
+1. Create a Redux Store
+2. Provide the Redux Store to React
+3. Create a Redux State Slice
+4. Add Slice Reducers to the Store
+5. Use Redux State and Actions in React Components
 
+Code
+
+```js
 //store.js
-
-```js
-import { configureStore } from "@reduxjs/toolkit";
-
-export const store = configureStore({
-  reducer: {},
+export default configureStore({
+  reducer: {
+    counter: counterReducer,
+    todos: todoReducer,
+  },
 });
-```
-
-## Provide the Redux Store to React
-
-Once the store is created, we can make it available to our React components by putting a React-Redux <Provider> around our application in src/index.js. Import the Redux store we just created, put a <Provider> around your <App>, and pass the store as a prop:
 
 //index.js
-
-```js
 import React from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
+import ReactDOM from "react-dom";
 import App from "./App";
-import { store } from "./app/store";
+import store from "./app/store";
 import { Provider } from "react-redux";
 
-const container = document.getElementById("root");
-
-if (container) {
-  const root = createRoot(container);
-
-  root.render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-} else {
-  throw new Error(
-    "Root element with ID 'root' was not found in the document. Ensure there is a corresponding HTML element with the ID 'root' in your HTML file."
-  );
-}
-```
-
-## Create a Redux State Slice
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);
 
 //counterSlice.js
-
-```js
 import { createSlice } from "@reduxjs/toolkit";
-
-const initialState = {
-  value: 0,
-};
 
 export const counterSlice = createSlice({
   name: "counter",
-  initialState,
+  initialState: {
+    value: 0,
+  },
   reducers: {
     increment: (state) => {
       state.value += 1;
@@ -87,55 +73,115 @@ export const counterSlice = createSlice({
     },
   },
 });
-// Action creators are generated for each case reducer function
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 export default counterSlice.reducer;
-```
 
-## Add Slice Reducers to the Store
+//todoSlice.js
+import { createSlice } from "@reduxjs/toolkit";
 
-```js
-import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "../features/counter/counterSlice";
-
-export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
+const todoSlice = createSlice({
+  name: "todos",
+  initialState: [],
+  reducers: {
+    addTodo: (state, action) => {
+      const newTodo = {
+        id: Date.now(),
+        text: action.payload,
+        completed: false,
+      };
+      state.push(newTodo);
+    },
+    toggleComplete: (state, action) => {
+      const todo = state.find((todo) => todo.id === action.payload);
+      if (todo) {
+        todo.completed = !todo.completed;
+      }
+    },
+    deleteTodo: (state, action) => {
+      const index = state.findIndex((todo) => todo.id === action.payload);
+      if (index !== -1) {
+        state.splice(index, 1);
+      }
+    },
   },
 });
-```
 
-## Use Redux State and Actions in React Components
+export const { addTodo, toggleComplete, deleteTodo } = todoSlice.actions; ///???
+export default todoSlice.reducer;
 
-Now we can use the React-Redux hooks to let React components interact with the Redux store.
-
-```js
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment } from "./counterSlice";
+///Counter.js
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  decrement,
+  increment,
+} from './counterSlice';
 
 export function Counter() {
-  const count = useSelector((state) => state.counter.value);
+  const count = useSelector(selectCount);
   const dispatch = useDispatch();
 
   return (
     <div>
-      <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}>
-          Increment
-        </button>
-        <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}>
-          Decrement
-        </button>
-      </div>
+        <button onClick={() => dispatch(increment())}>+</button>
+        <span className={styles.value}>{count}</span>
+        <button onClick={() => dispatch(decrement())}>-</button>
+    </div>
+    )
+}
+
+//Todo.js
+import { useSelector, useDispatch } from "react-redux";
+import { addTodo, toggleComplete, deleteTodo } from "./todoSlice";
+
+export const Todo = () => {
+  const [text, setText] = useState("");
+  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+
+  const handleInputChange = (e) => {
+    setText(e.target.value);
+  };
+
+  const handleAddTodo = () => {
+    if (text) {
+      dispatch(addTodo(text));
+      setText("");
+    }
+  };
+
+  const handleToggleComplete = (id) => {
+    dispatch(toggleComplete(id));
+  };
+
+  const handleDeleteTodo = (id) => {
+    dispatch(deleteTodo(id));
+  };
+
+  return (
+    <div>
+      <input type="text" value={text} onChange={handleInputChange} />{" "}
+      <button onClick={handleAddTodo}> Add Todo </button>{" "}
+      <ul>
+        {" "}
+        {todos.map((todo) => (
+          <li
+            key={todo.id}
+            style={{
+              textDecoration: todo.completed ? "line-through" : "none",
+            }}>
+            {todo.text}{" "}
+            <button onClick={() => handleToggleComplete(todo.id)}>
+              {" "}
+              {todo.completed ? "Mark Incomplete" : "Mark Complete"}{" "}
+            </button>{" "}
+            <button onClick={() => handleDeleteTodo(todo.id)}> Delete </button>{" "}
+          </li>
+        ))}{" "}
+      </ul>{" "}
     </div>
   );
-}
+};
 ```
 
 ## Summary
@@ -170,4 +216,29 @@ The strength of Redux itself is that it creates a data flow outside of your comp
 
 - [Redux Toolkit vs. TanStack Query: Which Should You Use?](https://medium.com/@andrew.chester/redux-toolkit-vs-tanstack-query-which-should-you-use-3f22ffe29820)
 
-![](./screen1.png)
+## Demo
+
+```js
+npm start
+```
+
+![](./demo.png)
+
+## Others
+
+- [What is the difference between onClick handler approach](https://stackoverflow.com/questions/76520889/what-is-the-difference-between-onclick-handler-approach)
+
+```js
+<button onClick={handleChange}>Change Text</button>
+<button onClick={() => handleChange()}>Change Text</button>
+```
+
+Both will work, and in this case, both will functionally be pretty much the same.
+
+In your first example, you're directly passing the function reference to onClick
+
+`<button onClick={handleChange}>Change Text</button>`
+In your second example, you're passing an anonymous function to onClick. When called, that anonymous function calls handleChange
+
+`<button onClick={() => handleChange()}>Change Text</button>`
+Unless you're getting some parameters passed to handleChange that you don't want to, I'd suggest not wrapping it in an anonymous function like your second example. There's no benefit to it. It's just overhead.
