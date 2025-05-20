@@ -81,31 +81,27 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const todoSlice = createSlice({
   name: "todos",
-  initialState: [],
+  initialState: { todo: [] },
   reducers: {
     addTodo: (state, action) => {
-      const newTodo = {
+      state.todo.push({
         id: Date.now(),
         text: action.payload,
         completed: false,
-      };
-      state.push(newTodo);
+      });
     },
-    toggleComplete: (state, action) => {
-      const todo = state.find((todo) => todo.id === action.payload);
-      if (todo) {
-        todo.completed = !todo.completed;
-      }
+    completeTodo: (state, action) => {
+      const todo = state.todo.find((todo) => todo.id === action.payload);
+      todo.completed = true;
     },
     deleteTodo: (state, action) => {
-      const index = state.findIndex((todo) => todo.id === action.payload);
+      const index = state.todo.findIndex((todo) => todo.id === action.payload);
       if (index !== -1) {
         state.splice(index, 1);
       }
     },
   },
 });
-
 export const { addTodo, toggleComplete, deleteTodo } = todoSlice.actions; ///???
 export default todoSlice.reducer;
 
@@ -131,12 +127,9 @@ export function Counter() {
 }
 
 //Todo.js
-import { useSelector, useDispatch } from "react-redux";
-import { addTodo, toggleComplete, deleteTodo } from "./todoSlice";
-
 export const Todo = () => {
   const [text, setText] = useState("");
-  const todos = useSelector((state) => state.todos);
+  const todos = useSelector((state) => state.todos.todo);
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -150,20 +143,11 @@ export const Todo = () => {
     }
   };
 
-  const handleToggleComplete = (id) => {
-    dispatch(toggleComplete(id));
-  };
-
-  const handleDeleteTodo = (id) => {
-    dispatch(deleteTodo(id));
-  };
-
   return (
     <div>
       <input type="text" value={text} onChange={handleInputChange} />{" "}
       <button onClick={handleAddTodo}> Add Todo </button>{" "}
       <ul>
-        {" "}
         {todos.map((todo) => (
           <li
             key={todo.id}
@@ -171,14 +155,15 @@ export const Todo = () => {
               textDecoration: todo.completed ? "line-through" : "none",
             }}>
             {todo.text}{" "}
-            <button onClick={() => handleToggleComplete(todo.id)}>
-              {" "}
+            <button onClick={() => dispatch(completeTodo(todo.id))}>
               {todo.completed ? "Mark Incomplete" : "Mark Complete"}{" "}
             </button>{" "}
-            <button onClick={() => handleDeleteTodo(todo.id)}> Delete </button>{" "}
+            <button onClick={() => dispatch(deleteTodo(todo.id))}>
+              Delete
+            </button>{" "}
           </li>
-        ))}{" "}
-      </ul>{" "}
+        ))}
+      </ul>
     </div>
   );
 };

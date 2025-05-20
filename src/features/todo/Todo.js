@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addTodo, toggleComplete, deleteTodo } from "./todoSlice";
+import { addTodo, completeTodo, deleteTodo } from "./todoSlice";
 
 export const Todo = () => {
   const [text, setText] = useState("");
-  const todos = useSelector((state) => state.todos);
+  const todos = useSelector((state) => state.todos.todo);
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -16,14 +16,6 @@ export const Todo = () => {
       dispatch(addTodo(text));
       setText("");
     }
-  };
-
-  const handleToggleComplete = (id) => {
-    dispatch(toggleComplete(id));
-  };
-
-  const handleDeleteTodo = (id) => {
-    dispatch(deleteTodo(id));
   };
 
   return (
@@ -39,14 +31,15 @@ export const Todo = () => {
               textDecoration: todo.completed ? "line-through" : "none",
             }}>
             {todo.text}{" "}
-            <button onClick={() => handleToggleComplete(todo.id)}>
-              {" "}
+            <button onClick={() => dispatch(completeTodo(todo.id))}>
               {todo.completed ? "Mark Incomplete" : "Mark Complete"}{" "}
             </button>{" "}
-            <button onClick={() => handleDeleteTodo(todo.id)}> Delete </button>{" "}
+            <button onClick={() => dispatch(deleteTodo(todo.id))}>
+              Delete
+            </button>{" "}
           </li>
-        ))}{" "}
-      </ul>{" "}
+        ))}
+      </ul>
     </div>
   );
 };

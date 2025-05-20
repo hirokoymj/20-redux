@@ -1,31 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const todoSlice = createSlice({
   name: "todos",
-  initialState: [],
+  initialState: { todo: [] },
   reducers: {
     addTodo: (state, action) => {
-      console.log("addTodo");
-      console.log(action);
-      const newTodo = {
+      state.todo.push({
         id: Date.now(),
         text: action.payload,
         completed: false,
-      };
-      state.push(newTodo);
+      });
     },
-    toggleComplete: (state, action) => {
-      console.log("toggleComplete");
-      console.log(action);
-      const todo = state.find((todo) => todo.id === action.payload);
-      if (todo) {
-        todo.completed = !todo.completed;
-      }
+    completeTodo: (state, action) => {
+      const todo = state.todo.find((todo) => todo.id === action.payload);
+      todo.completed = true;
     },
     deleteTodo: (state, action) => {
-      console.log("deleteTodo");
-      console.log(action);
-      const index = state.findIndex((todo) => todo.id === action.payload);
+      const index = state.todo.findIndex((todo) => todo.id === action.payload);
       if (index !== -1) {
         state.splice(index, 1);
       }
@@ -33,5 +24,5 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, toggleComplete, deleteTodo } = todoSlice.actions; ///???
+export const { addTodo, completeTodo, deleteTodo } = todoSlice.actions;
 export default todoSlice.reducer;
