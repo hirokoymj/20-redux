@@ -11,13 +11,13 @@ import { Provider, useSelector, useDispatch } from "react-redux";
 import ReactDOM from "react-dom";
 
 const store = configureStore({reducer:{}})
-const counterSlice = createSlice({name: xxx, initialState: {}, reducers: {add:(state,action)=>{}}})
-export const {func1, func2} = counterSlice.actions
-export default counterSlice.reducer
-const count = useSelector((state) => state.counter.value)
+const todoSlice = createSlice({name: xxx, initialState: {todo:[]}, reducers: {add:(state,action)=>{}}})
+export const {func1, func2} = todoSlice.actions
+export default todorSlice.reducer
+const count = useSelector((state) => state.todos.todo)
 const dispatch = useDispatch()
-onClick={() => dispatch(decrement())}>
-dispatch(addTodo(text))
+onClick={() => deleteTodo(data.id)}
+onClick={dispatch(addTodo())}
 
 ReactDOM.render(<Provider store={store}><App /></Provider>,document.getElementById("root"));
 ```

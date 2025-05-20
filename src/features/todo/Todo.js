@@ -10,7 +10,6 @@ export const Todo = () => {
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
-
   const handleAddTodo = () => {
     if (text) {
       dispatch(addTodo(text));
