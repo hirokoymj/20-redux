@@ -14,7 +14,7 @@ const store = configureStore({reducer:{}})
 const todoSlice = createSlice({name: xxx, initialState: {todo:[]}, reducers: {add:(state,action)=>{}}})
 export const {func1, func2} = todoSlice.actions
 export default todorSlice.reducer
-const count = useSelector((state) => state.todos.todo)
+const todo = useSelector((state) => state.todos.todo)
 const dispatch = useDispatch()
 onClick={() => deleteTodo(data.id)}
 onClick={dispatch(addTodo())}
