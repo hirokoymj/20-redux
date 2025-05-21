@@ -1,8 +1,34 @@
 # React Tasks
 
-1. Render nested array of objects
-2. React Form
-3. React RESTful API with `fetch`
+## `fetch` example -
+
+```js
+export const UsersView = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const url = "https://jsonplaceholder.typicode.com/users";
+    const getData = async () => {
+      try {
+        const response = fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error - ${response.status}`);
+        }
+        const json = (await response).json();
+        setData(json);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+  }, []);
+```
+
+//2. React Form
+//3.
 
 **Q1: Render nested array of objects**
 
