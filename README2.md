@@ -9,21 +9,20 @@ export const UsersView = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const url = "https://jsonplaceholder.typicode.com/users";
+    const url = "https://jsonplaceholder.typicode.com/todos/1";
     const getData = async () => {
       try {
-        const response = fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error - ${response.status}`);
-        }
-        const json = (await response).json();
+        const response = await fetch(url);
+        if (!response.ok) throw Error(`HTTP error`);
+        const json = await response.json();
         setData(json);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        setError(error);
       } finally {
         setLoading(false);
       }
     };
+    getData();
   }, []);
 ```
 

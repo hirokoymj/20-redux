@@ -2,26 +2,39 @@ import React, { useState, useEffect } from "react";
 
 export const UsersView = () => {
   const [data, setData] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "https://jsonplaceholder.typicode.com/todos/1"
+  //       );
+  //       if (!response.ok) throw Error(`HTTP error ${response.status}`);
+  //       const json = await response.json();
+  //       setData(json);
+  //     } catch (error) {
+  //       setError(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   getData();
+  // }, []);
+
   useEffect(() => {
-    const url = "http//example.com";
+    const url = "https://jsonplaceholder.typicode.com/todos/1";
     const getData = async () => {
       try {
-        const response = fetch("url", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username: "example" }),
-        });
+        const response = await fetch(url);
         if (!response.ok) throw Error(`HTTP error`);
         const json = await response.json();
         setData(json);
       } catch (error) {
         setError(error);
       } finally {
+        setLoading(false);
       }
     };
     getData();
@@ -38,18 +51,7 @@ export const UsersView = () => {
   return (
     <div className="App">
       <h1>Data from API:</h1>
-      <table className="table">
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-        </tr>
-        {data.map((user) => (
-          <tr>
-            <td>{user.id}</td>
-            <td>{user.name}</td>
-          </tr>
-        ))}
-      </table>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 };

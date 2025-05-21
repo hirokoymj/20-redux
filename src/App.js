@@ -18,6 +18,7 @@ function App() {
       <h2>Nested render demo</h2>
       <DemoView />
       <hr /> */}
+      <h2>Demo</h2>
       <UsersView />
       {/* <hr />
       <MyComponent /> */}
