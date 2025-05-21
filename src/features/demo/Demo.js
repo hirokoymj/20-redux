@@ -23,9 +23,10 @@ const data = [
 export const DemoView = () => {
   return (
     <div>
+      <h2>Demo</h2>
       {data.map((category) => (
         <div key={category.id}>
-          <h1>{category.name}</h1>
+          <h3>{category.name}</h3>
           <ul>
             {category.items.map((item) => (
               <li key={item.id}>{item.id}</li>
@@ -37,6 +38,7 @@ export const DemoView = () => {
   );
 };
 
+// Wrong on 5/20
 // <div>
 //   <h2>Demo</h2>
 //   {data.map((category) => (
@@ -47,4 +49,20 @@ export const DemoView = () => {
 //       <li>{item.id}</li>
 //     ))}
 //   </ul>
+// </div>
+
+// Correct on 05/20
+// <div>
+//   {data.map((category) => (
+//     <div>
+//       <h1>{category.name}</h1>
+//       <ul key={category.id}>
+//         {category.items.map((item) => (
+//           <li>
+//             {item.id} {item.name}
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   ))}
 // </div>
