@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
+import useFetch from "./useFetch";
 
 const url = "https://jsonplaceholder.typicode.com/users";
 
-export const UsersView = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [message, setMessage] = useState("");
+export const UsersView2 = () => {
+  // const [users, setUsers] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // const [message, setMessage] = useState("");
+  const [data, loading, error] = useFetch();
+
   ///FORM
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
