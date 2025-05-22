@@ -49,7 +49,6 @@ export const UsersView = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     fetch("https://jsonplaceholder.typicode.com/users", {
       method: "POST",
       headers: {
