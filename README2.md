@@ -1,35 +1,87 @@
-# React Tasks
+# REST APIs using fetch API
 
-## `fetch` example -
+```js
+useEffect(()=>{}, [])
+// Method #1 - Use .then
+fetch(url).then(response=>{}).then(data=>{}).catch(error=>{})
+======
+fetch(url) -> response
+!response.ok -> new Error()
+response.json() -> data
+=====
+// Method #2 - Use async/await
+const getData = async() =>{try().catch().finally()}
+const response = await fetch(url)
+const data = await response.json()
+```
+
+## GET
 
 ```js
 export const UsersView = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const url = "https://jsonplaceholder.typicode.com/todos/1";
-    const getData = async () => {
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw Error(`HTTP error`);
-        const json = await response.json();
-        setData(json);
-      } catch (error) {
-        setError(error);
-      } finally {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error("");
+        return response.json();
+      })
+      .then((data) => {
+        setData(data);
         setLoading(false);
-      }
-    };
-    getData();
+      })
+      .catch((e) => {
+        setError(e);
+      });
   }, []);
+```
+
+### POST
+
+```js
+fetch("https://jsonplaceholder.typicode.com/posts", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({id:xx, name:xxx}),
+})
+  .then(response).then.(data).catch(e);
+```
+
+### DELETE
+
+```js
+fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+  method: "DELETE",
+})
+  .then(response)
+  .then(data)
+  .catch(e);
+```
+
+### PUT
+
+```js
+fetch("https://your-api-endpoint.com/items/1", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(data),
+})
+  .then(response)
+  .then(updatedData)
+  .catch(e);
 ```
 
 //2. React Form
 //3.
 
-**Q1: Render nested array of objects**
+### Render nested array of objects
 
 ```js
 onst data = [
@@ -75,14 +127,13 @@ return (
 ```js
 export const DemoView = () => {
   return (
-    <div>
-      <h2>Demo</h2>
+    <div> ## <====A outer div of the first map().
       {data.map((category) => (
-        <div key={category.id}>
+        <div key={category.id}>## <====A innter div of the 2nd map().
           <h3>{category.name}</h3>
-          <ul>
+          <ul> ## <====A outer div of the map().
             {category.items.map((item) => (
-              <li key={item.id}>{item.id}</li>
+              <li key={item.id}>{item.id}</li> ## <====A innter div of the map().
             ))}
           </ul>
         </div>

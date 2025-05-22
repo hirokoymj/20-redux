@@ -20,7 +20,7 @@ const data = [
   },
 ];
 //Keys are added to the outer and inner map() calls to help React efficiently update the DOM.
-export const DemoView = () => {
+export const NestedDataView = () => {
   return (
     <div>
       <h2>Demo</h2>
