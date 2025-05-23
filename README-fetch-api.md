@@ -29,19 +29,23 @@ export const UsersView = () => {
   useEffect(() => {
     fetch(url)
       .then((response) => {
-        if (!response.ok) throw new Error("");
+        if (!response.ok) throw new Error("Failed to get users data.");
         return response.json();
       })
       .then((data) => {
         setUsers(data);
-        setLoading(false);
       })
       .catch((e) => {
         setError(e);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 };
 ```
+
+![](./screen-restful-get.png)
 
 ## POST
 
@@ -55,6 +59,7 @@ export const UsersView = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     fetch("https://jsonplaceholder.typicode.com/users", {
       method: "POST",
       headers: {
@@ -70,10 +75,54 @@ export const UsersView = () => {
       })
       .catch((error) => {
         setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 };
 ```
+
+![](./screen-restful-post.png)
+
+## PUT
+
+- Update user name to "dummy"
+
+```js
+export const UsersView = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const handleUpdate = (id) => {
+    const user = users.find((user) => user.id === id);
+    fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...user, name: "dummy" }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("");
+        return response.json();
+      })
+      .then((data) => {
+        setMessage("User updated successfully:");
+        setUsers((values) =>
+          values.map((item) => (item.id === id ? data : item))
+        );
+      })
+      .catch((e) => {
+        setError(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+};
+```
+
+- ![](./screen-restful-put.png)
 
 ## DELETE
 
@@ -88,17 +137,21 @@ const handleDelete = (id) => {
     })
     .then((data) => {
       setMessage("Item deleted successfully:");
-      setUsers((values) => {
-        return values.filter((item) => item.id !== id);
-      });
-      console.log(data);
-      setLoading(false);
+      setUsers((values) => values.filter((item) => item.id !== id));
     })
     .catch((e) => {
-      setError(e);
+      setError("Delete failed");
+      console.log(e);
+    })
+    .finally(() => {
+      setLoading(false);
     });
 };
 ```
+
+![](./screen-restful-delete.png)
+
+<hr />
 
 ## Custom Hook - useFetch
 
@@ -136,4 +189,5 @@ export default useFetch;
 
 ## References:
 
+- https://dev.to/collegewap/react-fetch-example-getpostputdelete-with-api-3l00
 - https://stackoverflow.com/questions/62613709/implement-usefetch-react-hook-to-work-inside-submit-function

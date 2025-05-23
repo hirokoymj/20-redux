@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 
 const url = "https://jsonplaceholder.typicode.com/users";
 
@@ -12,17 +13,20 @@ export const UsersView = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
+    setLoading(true);
     fetch(url)
       .then((response) => {
-        if (!response.ok) throw new Error("");
+        if (!response.ok) throw new Error("Failed to get users data.");
         return response.json();
       })
       .then((data) => {
         setUsers(data);
-        setLoading(false);
       })
       .catch((e) => {
         setError(e);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -36,14 +40,14 @@ export const UsersView = () => {
       })
       .then((data) => {
         setMessage("Item deleted successfully:");
-        setUsers((values) => {
-          return values.filter((item) => item.id !== id);
-        });
-        console.log(data);
-        setLoading(false);
+        setUsers((values) => values.filter((item) => item.id !== id));
       })
       .catch((e) => {
-        setError(e);
+        setError("Delete failed");
+        console.log(e);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -59,11 +63,39 @@ export const UsersView = () => {
       .then((response) => response.json())
       .then((data) => {
         setUsers([...users, data]);
-        setName("");
-        setEmail("");
       })
       .catch((error) => {
         setError(error);
+      })
+      .finally(() => {
+        setName("");
+        setEmail("");
+        setLoading(false);
+      });
+  };
+
+  const handleUpdate = (id) => {
+    const user = users.find((user) => user.id === id);
+    fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...user, name: "dummy" }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("");
+        return response.json();
+      })
+      .then((data) => {
+        setMessage("User updated successfully:");
+        setUsers((values) =>
+          values.map((item) => (item.id === id ? data : item))
+        );
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -77,6 +109,8 @@ export const UsersView = () => {
 
   return (
     <div className="App">
+      <Outlet />
+      <hr />
       <h1>User list</h1>
       <p style={{ color: "red" }}>{message}</p>
       <table className="table">
@@ -97,7 +131,7 @@ export const UsersView = () => {
                 <button onClick={() => handleDelete(user.id)}>Delete</button>
               </td>
               <td>
-                <button onClick={() => console.log("update")}>Update</button>
+                <button onClick={() => handleUpdate(user.id)}>Update</button>
               </td>
             </tr>
           ))}

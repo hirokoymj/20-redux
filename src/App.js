@@ -57,30 +57,6 @@ function Layout() {
   );
 }
 
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
-  );
-}
-
 function NoMatch() {
   return (
     <div>
@@ -91,23 +67,3 @@ function NoMatch() {
     </div>
   );
 }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       {/* <h2>Redux Demo</h2>
-//       <Todo />
-//       <hr />
-//       <h2>Counter Redux Demo</h2>
-//       <Counter />
-//       <hr />
-//       <h2>Nested render demo</h2>
-//       <DemoView />
-//       <hr /> */}
-//       <h2>Demo</h2>
-//       <UsersView />
-//       {/* <hr />
-//       <MyComponent /> */}
-//     </div>
-//   );
-// }
